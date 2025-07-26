@@ -1,17 +1,20 @@
 package com.example.loan_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+
 import java.time.LocalDate;
 
-public class LoanAccountResponseDto {
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ExternalLoanApiResponse {
     private String loanAccountNumber;
+    private String accountHolderName;
     private LocalDate dueDate;
     private Integer emiAmount;
+    private String status;
 
-    public LoanAccountResponseDto(String loanAccountNumber, LocalDate dueDate, Integer emiAmount) {
-        this.loanAccountNumber = loanAccountNumber;
-        this.dueDate = dueDate;
-        this.emiAmount = emiAmount;
+    public ExternalLoanApiResponse() {
     }
 
     public String getLoanAccountNumber() {
@@ -20,6 +23,14 @@ public class LoanAccountResponseDto {
 
     public void setLoanAccountNumber(String loanAccountNumber) {
         this.loanAccountNumber = loanAccountNumber;
+    }
+
+    public String getAccountHolderName() {
+        return accountHolderName;
+    }
+
+    public void setAccountHolderName(String accountHolderName) {
+        this.accountHolderName = accountHolderName;
     }
 
     public LocalDate getDueDate() {
@@ -38,12 +49,22 @@ public class LoanAccountResponseDto {
         this.emiAmount = emiAmount;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "LoanAccountResponseDto{" +
+        return "ExternalLoanApiResponse{" +
                 "loanAccountNumber='" + loanAccountNumber + '\'' +
+                ", accountHolderName='" + accountHolderName + '\'' +
                 ", dueDate=" + dueDate +
                 ", emiAmount=" + emiAmount +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

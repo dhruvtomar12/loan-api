@@ -1,28 +1,31 @@
 package com.example.loan_api.controller;
 
 import com.example.loan_api.dto.LoanAccountResponseDto;
+import com.example.loan_api.Exception.ResourceNotFoundException;
 import com.example.loan_api.service.LoanAccountService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/loanaccount")
+@RequestMapping("/api/loan-accounts")
 public class LoanAccountController {
-    private static final Logger log = LoggerFactory.getLogger(LoanAccountController.class);
-    @Autowired
-    private LoanAccountService service;
+
+    private final LoanAccountService loanService;
+
+    public LoanAccountController(LoanAccountService loanService) {
+        this.loanService = loanService;
+    }
 
     @GetMapping("/{loanAccountNumber}")
-    public ResponseEntity<LoanAccountResponseDto> getLoanDetails(@PathVariable String loanAccountNumber){
-        log.info("Received request for loan account: {}",loanAccountNumber);
-        return ResponseEntity.ok(service.getLoanAccount(loanAccountNumber));
+    public ResponseEntity<LoanAccountResponseDto> getLoanDetails(@PathVariable String loanAccountNumber) {
+        LoanAccountResponseDto response = loanService.getAndPersistLoanDetails(loanAccountNumber);
+        return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
